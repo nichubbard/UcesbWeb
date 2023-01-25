@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>ucesb Implantation Monitor</title>
+
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!-- Bootstrap core CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+	  .table-data {
+		padding-right: 2em;
+	  }
+	  
+      .text-custom {
+	color: #ffdb6e;
+      }
+    </style>
+	
+    <!-- Custom styles for this template -->
+    <!-- <link href="starter-template.css" rel="stylesheet"> -->
+  </head>
+  <body>
+  
+  <!--
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+-->
+
+<noscript>
+	<div class="alert alert-warning" role="alert">
+	This page requires JavaScript to display any data!
+	</div>
+</noscript>
+
+<main class="container">
+
+<h1>ucesb Implantation Monitor</h1>
+<ul class="list-inline lead">
+  <li class="list-inline-item">Websocket Status:
+	<span data-target="ws" class="text-danger ws-disconnected">Disconnected</span>
+	<span data-target="ws" class="text-success collapse ws-connected">Connected</span>
+  </li>
+  <li class="list-inline-item">ucesb Status: 
+	<span class="ucesb-info ucesb-init ucesb-dead collapse">
+		Connected to <span data-ucesb-json="summary.server">?</span>
+	</span>
+	<span class="ucesb-to ucesb-stopped">
+		Disconnected
+	</span>
+  </li>
+  <li class="list-inline-item">Clients connected: <span data-ucesb-default="0" data-ucesb-json="summary.clients">-</span></li>
+</ul>
+
+<div class="alert alert-info collapse ucesb-stopped" role="alert">
+  <h4 class="alert-heading">ucesb Stopped</h4>
+  <p>ucesb was stopped and is no longer sending data</p>
+</div>
+
+<div class="alert alert-warning collapse ucesb-to" role="alert">
+  <h4 class="alert-heading">ucesb Timed Out</h4>
+  <p>ucesb didn't send data for over a minute, perhaps it crashed?</p>
+</div>
+
+<div class="alert alert-danger collapse ucesb-dead" role="alert">
+  <h4 class="alert-heading">DAQ Error</h4>
+  <p>ucesb is running but did not receive any events from MBS for over a minute, <strong>check the DAQ!</strong></p>
+  <hr>
+  <p>Check the following webpages to monitor the DAQ: <a href="/dabc/">DABC</a></p>
+</div>
+
+<div class="alert alert-info collapse ucesb-init" role="alert">
+  <h4 class="alert-heading">Waiting for initial events</h4>
+  <p>ucesb was started and is waiting for initial events from MBS</p>
+</div>
+
+<div class="ucesb-info">
+
+<h2 class="singleshot-stage-0">Spill Status: Waiting for Spill to end</h2>
+<h2 class="singleshot-stage-1 collapse">Spill Status: Waiting for Spill</h2>
+<h2 class="singleshot-stage-2 collapse">Spill Status: On Spill <span class="singleshot-spills-left">5</span> Left</h2>
+<h2 class="singleshot-stage-3 collapse">Spill Status: End of Spills</h2>
+<h3 class="singleshot-stage-3 collapse"> Refresh for a new spill</h3>
+
+<div>&nbsp;</div>
+
+<table class="table-lg table">
+	<colgroup>
+		<col style="width:34%">
+		<col style="width:20%"><col><col style="width:45%">
+	</colgroup>
+	<thead>
+	<tr>
+		<td></td>
+		<td></td>
+		<th class="text-right" scope="col">Counts</th>
+		<th class="text-right" scope="col">SC41 Normalised</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<th scope="row">SC 41 </th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.frs.49.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.frs.49.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+	</tr>
+	<tr>
+		<th scope="row">SC 42</th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.frs.50.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.frs.50.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+	</tr>
+	<tr>
+		<th scope="row">bPlas 1</th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.fatima.6.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.fatima.6.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+	</tr>
+	<tr>
+		<th scope="row">DSSD 1 </th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.aida.0.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.aida.0.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+	</tr>
+	<tr>
+		<th scope="row">DSSD 2 </th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.aida.2.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.aida.2.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+	</tr>
+	<!--
+	<tr>
+		<th scope="row">DSSD 3</th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.aida.4.spill"  data-ucesb-default="0"></td>
+		<td></td>
+	</tr>
+	-->
+	<tr>
+		<th scope="row">bPlas 2</th>
+		<td></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.fatima.7.spill" data-ucesb-default="0"></td>
+		<td class="text-right text-monospace" data-ucesb-json="scalers.fatima.7.spill" data-ucesb-default="0" data-ucesb-js="scale_sci41"></td>
+		<td></td>
+	</tr>
+	</tbody>
+</table>
+
+</div>
+
+</main><!-- /.container -->
+	<script src="js/jquery-3.5.1.slim.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/vendor/jquery.slim.min.js"><\/script>')</script><script src="js/bootstrap.bundle.min.js"></script>
+	<script>
+	  var singleShot = true;
+	  var singleShotCounter = 5;
+	</script>
+	<script src="js/s496.js"></script>
+	<script src="js/ucesb.js"></script>
+</body>
+</html>
+
